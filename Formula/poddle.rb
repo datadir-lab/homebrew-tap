@@ -5,42 +5,52 @@
 class Poddle < Formula
   desc "Self-hostable, secret-safe dev sandboxes for coding agents."
   homepage "https://github.com/datadir-lab/poddle"
-  version "0.1.1"
+  version "0.1.2"
   license "AGPL-3.0"
 
   on_macos do
-    on_intel do
-      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.1/poddle_0.1.1_darwin_amd64.tar.gz"
-      sha256 "5cdcb71636f4e32ef00a33fb15660509abbb39351dc757a9ca5c5b9508737c59"
+    if Hardware::CPU.intel?
+      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.2/poddle_0.1.2_darwin_amd64.tar.gz"
+      sha256 "d58a4de0b6ae130e9043770ba6e0330c77190db8a2773694f546c51eb8057111"
+
+      define_method(:install) do
+        bin.install "poddle"
+      end
     end
-    on_arm do
-      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.1/poddle_0.1.1_darwin_arm64.tar.gz"
-      sha256 "097e44f9030a6ee9a68a44edba1fdac3b472c69f59aeadb3e521865d78f38b5e"
+    if Hardware::CPU.arm?
+      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.2/poddle_0.1.2_darwin_arm64.tar.gz"
+      sha256 "c5145153dbe4dfabb2780cb792d36a1fb7059a780dba989ab6c1fee552507feb"
+
+      define_method(:install) do
+        bin.install "poddle"
+      end
     end
   end
 
   on_linux do
-    on_intel do
-      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.1/poddle_0.1.1_linux_amd64.tar.gz"
-      sha256 "494e79711e0be94e0c71d24571cfd74fa577d8c68e7f7e6c7d4bdde29864dae4"
+    if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
+      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.2/poddle_0.1.2_linux_amd64.tar.gz"
+      sha256 "f89c06ccfcaf7f1a0dea48bcc8956d93b509a4c051da48a70401cb739f2a33d1"
+      define_method(:install) do
+        bin.install "poddle"
+      end
     end
-    on_arm do
-      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.1/poddle_0.1.1_linux_arm64.tar.gz"
-      sha256 "e96a9900b46c0c3b6677881aeabc5eebde651be7d85f1a7de950b1ae54b5cf85"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/datadir-lab/poddle/releases/download/v0.1.2/poddle_0.1.2_linux_arm64.tar.gz"
+      sha256 "bbee537c28b1494b9d6ba2f27929c24a58418ca1727cd3597ae5638085143cf6"
+      define_method(:install) do
+        bin.install "poddle"
+      end
     end
-  end
-
-  def install
-    bin.install "poddle"
-  end
-
-  test do
-    system "#{bin}/poddle", "version"
   end
 
   def caveats
     <<~EOS
       poddle runs pods with podman - install it separately: brew install podman
     EOS
+  end
+
+  test do
+    system "#{bin}/poddle", "version"
   end
 end
